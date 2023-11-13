@@ -1,0 +1,7 @@
+#!/bin/bash
+
+source venv/bin/activate
+coverage run --source='.' --omit='*/venv/*,project/*,setup.py,**/migrations/*' manage.py test
+coverage html
+coverage report --skip-empty --skip-covered -m
+
