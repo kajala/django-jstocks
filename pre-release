@@ -1,0 +1,45 @@
+#!/bin/bash
+
+source ./venv/bin/activate
+
+# check that no pending DB changes
+python manage.py migrate | grep makemigrations
+if [ "$?" == "0" ]; then
+    echo "Pending DB changes, run python manage.py makemigrations and commit changes first"
+    exit 1
+fi
+
+# automatic tests
+python manage.py test
+if [ "$?" != "0" ]; then
+    echo "Automatic tests reported problems, terminating release"
+    exit 1
+fi
+echo "Automatic tests ok, proceeding..."
+
+# prospector
+prospector -i htmlcov
+if [ "$?" != "0" ]; then
+    echo "Prospector reported problems, terminating release"
+    exit 1
+fi
+echo "Prospector cleared build, proceeding..."
+
+# mypy
+mypy `./venv/bin/python ./manage.py apps`
+if [ "$?" != "0" ]; then
+    echo "Mypy reported problems, terminating release"
+    exit 1
+fi
+echo "Mypy cleared build, proceeding..."
+
+# pytype
+pytype `./venv/bin/python ./manage.py apps`
+if [ "$?" != "0" ]; then
+    echo "Pytype reported problems, terminating release"
+    exit 1
+fi
+echo "Pytype cleared build, proceeding..."
+
+echo "Pre-release script ok"
+exit 0
