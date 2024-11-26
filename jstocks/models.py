@@ -670,7 +670,7 @@ class ShareAllocation(ShareOwnershipChange):
             raise ValidationError({"begin": _("This field is required.")})
 
         # make sure this is the latest transfer for this issuer
-        latest = ShareAllocation.objects.filter(seller=self.shares).order_by("-timestamp").last()
+        latest = ShareAllocation.objects.filter(shares=self.shares).order_by("-timestamp").last()
         if latest:
             assert isinstance(latest, ShareAllocation)
             if latest.timestamp > self.timestamp:
