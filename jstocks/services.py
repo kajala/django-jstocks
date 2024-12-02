@@ -297,10 +297,12 @@ def list_shares(owner: Party, share_type: ShareType, timestamp: Optional[datetim
     return shares
 
 
-def get_share_count(owner: Party, share_type: ShareType, timestamp: Optional[datetime] = None) -> int:
+def get_share_count(owner: Party, share_type: ShareType, timestamp: Optional[datetime] = None, timestamp_gte: Optional[datetime] = None) -> int:
     if timestamp is None:
         timestamp = now()
     qs = Tx.objects.filter(owner=owner, account=Tx.ACC_STOCK, share_type=share_type, timestamp__lte=timestamp)
+    if timestamp_gte is not None:
+        qs = qs.filter(timestamp__gte=timestamp_gte)
     return Tx.objects.sum_count(qs)  # type: ignore
 
 
