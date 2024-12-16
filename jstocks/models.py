@@ -12,7 +12,7 @@ from django.utils.formats import number_format
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 from jutil.modelfields import SafeCharField
-from jutil.format import dec2, choices_label
+from jutil.format import dec2, choices_label, dec4
 from jutil.validators import phone_filter
 
 from jstocks.countries import COUNTRY_CHOICES
@@ -374,7 +374,7 @@ class Tx(models.Model):
 
     @property
     def unit_price(self) -> Decimal:
-        return dec2(self.amount / Decimal(self.count)) if self.amount and self.count else Decimal("0.00")
+        return dec4(self.amount / Decimal(self.count)) if self.amount and self.count else Decimal("0.00")
 
     unit_price.fget.short_description = _("unit price")  # type: ignore
 
@@ -486,7 +486,7 @@ class ShareOwnershipChange(models.Model):
     begin = models.BigIntegerField(_("first share number"), db_index=True, blank=True, default=None, null=True)
     last = models.BigIntegerField(_("last share number"), db_index=True, blank=True, default=None, null=True)
     price = models.DecimalField(_("price"), max_digits=10, decimal_places=2, null=True, default=None, blank=True, db_index=True)  # noqa
-    unit_price = models.DecimalField(_("unit price"), max_digits=10, decimal_places=2, null=True, default=None, blank=True, db_index=True)  # noqa
+    unit_price = models.DecimalField(_("unit price"), max_digits=10, decimal_places=4, null=True, default=None, blank=True, db_index=True)  # noqa
     record_date = models.DateTimeField(_("record date"), default=None, null=True, editable=False, db_index=True, blank=True)
     timestamp = models.DateTimeField(_("timestamp"), default=now, db_index=True, blank=True)
     entry = models.ForeignKey(
@@ -542,7 +542,7 @@ class ShareOwnershipChange(models.Model):
                 self.price = dec2(self.unit_price * n)
             elif self.price is not None:
                 if self.unit_price is None:
-                    self.unit_price = dec2(self.price / n)
+                    self.unit_price = dec4(self.price / n)
 
 
 class ShareTransferAttachment(models.Model):
