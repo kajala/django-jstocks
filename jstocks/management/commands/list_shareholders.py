@@ -61,7 +61,7 @@ class Command(SafeCommand):
                 total_all_users += share_count
                 rows.append(
                     [
-                        owner.name,
+                        owner.get_name(),
                         owner.party_type_label,
                         owner.email,
                         owner.phone,

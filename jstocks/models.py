@@ -124,10 +124,18 @@ class Party(models.Model):
 
     @property
     def full_name(self) -> str:
-        return " ".join([self.first_name, self.last_name]).strip()
+        return " ".join([str(self.first_name), str(self.last_name)]).strip()
 
     def get_name(self) -> str:
-        return self.org_name if self.is_org else self.full_name
+        if self.is_org:
+            return str(self.org_name)
+        name = self.full_name
+        if name:
+            return name
+        user = self.user
+        if user is not None:
+            return str(user.get_full_name())  # type: ignore
+        return ""
 
     def clean(self) -> None:
         self.name = self.get_name()

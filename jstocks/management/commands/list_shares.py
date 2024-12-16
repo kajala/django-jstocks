@@ -71,7 +71,7 @@ class Command(SafeCommand):
                     total += seq.count
                     rows.append(
                         [
-                            owner.name,
+                            owner.get_name(),
                             owner.party_type_label,
                             owner.email,
                             owner.phone,
