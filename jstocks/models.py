@@ -132,6 +132,8 @@ class Party(models.Model):
         name = self.full_name
         if name:
             return name
+        if self.is_org:
+            raise ValidationError(f"{self} is organization but name missing")
         user = self.user
         if user is not None:
             return str(user.get_full_name())  # type: ignore
