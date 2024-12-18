@@ -13,7 +13,7 @@ packages = find_packages(exclude=["*.venv", "*.venv.*", "venv.*", "venv"])
 
 setup(
     name="django-jstocks",
-    version="0.4.3",
+    version="0.4.4",
     author="Jani Kajala",
     author_email="kajala@gmail.com",
     packages=packages,
