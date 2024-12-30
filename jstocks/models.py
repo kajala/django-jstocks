@@ -101,7 +101,7 @@ class Party(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-        return str(self.name)
+        return str(self.get_name())
 
     @property
     def party_type_label(self) -> str:
