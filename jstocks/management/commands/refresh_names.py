@@ -19,4 +19,6 @@ class Command(SafeCommand):
             if name != old:
                 p.name = name
                 p.save(update_fields=["name"])
-                admin_log([p], f"Name updated from '{old}' to '{name}'")
+                msg = f"Name updated from '{old}' to '{name}'"
+                admin_log([p], msg)
+                logger.info("%s: %s", p, msg)
