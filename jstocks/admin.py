@@ -5,7 +5,6 @@ from typing import Optional, List, Any
 from django.contrib import admin, messages  # noqa
 from django.contrib.admin.options import TabularInline
 from django.contrib.auth.models import User
-from django.db import transaction
 from django.db.models import QuerySet
 from django.db.models.aggregates import Sum
 from django.http.request import HttpRequest
@@ -188,15 +187,15 @@ class PartyAdmin(JStocksAdminBase):
         "user__is_staff",
     )
     search_fields = (
-        "name",
+        "name__icontains",
         "=user__email",
         "=user__username",
-        "=ssn_masked",
+        "ssn_masked__startswith",
     )
 
     def name_link(self, obj):
         assert isinstance(obj, Party)
-        return obj.name or obj.email or obj.id
+        return obj.get_name()
 
     name_link.short_description = _("name")  # type: ignore
     name_link.admin_order_field = ""  # type: ignore
