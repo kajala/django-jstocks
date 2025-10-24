@@ -601,6 +601,8 @@ class ShareTransfer(ShareOwnershipChange):
             if latest.timestamp > self.timestamp:
                 raise ValidationError(_("Share ownership transfers must be recorded in order"))
 
+        if not self.count:
+            raise ValidationError(_("No shares to transfer"))
         list_shares_fifo(self.seller, self.share_type, self.count, self.timestamp)
 
         if not self.identifier:
