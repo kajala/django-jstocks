@@ -49,6 +49,8 @@ class Command(SafeCommand):
         for owner in owners_qs:
             assert isinstance(owner, Party)
             owner.refresh_owned_share_count()
+            if owner.owned_share_count == 0:
+                continue
             for share_type in list_share_types(owner):
                 if issuer and share_type.issuer.id != issuer.id:
                     continue
